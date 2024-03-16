@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Check-In and Check-Out</title>
+    <script>
+        function logTime(checkboxId, timeId, resultId) {
+            var checkbox = document.getElementById(checkboxId);
+            var timeField = document.getElementById(timeId);
+            var resultField = document.getElementById(resultId);
+            
+            if (checkbox.checked) {
+                var now = new Date();
+                var hours = now.getHours();
+                var minutes = now.getMinutes();
+                
+                // Format the time
+                var currentTime = (hours < 10 ? "0" : "") + hours + ":" + (minutes < 10 ? "0" : "") + minutes;
+                
+                // Set the value of the time field
+                timeField.value = currentTime;
+                
+                // Disable the checkbox after logging time
+                checkbox.disabled = true;
+                
+                // Calculate and display total duration
+                calculateDuration();
+            } else {
+                // Clear the time and result if unchecked
+                timeField.value = "";
+                resultField.textContent = "";
+            }
+        }
+        
+        function calculateDuration() {
+            var checkinTime = document.getElementById("checkinTime").value;
+            var checkoutTime = document.getElementById("checkoutTime").value;
+            
+            if (checkinTime && checkoutTime) {
+                var checkin = checkinTime.split(":");
+                var checkout = checkoutTime.split(":");
+                
+                var checkinHours = parseInt(checkin[0]);
+                var checkinMinutes = parseInt(checkin[1]);
+                
+                var checkoutHours = parseInt(checkout[0]);
+                var checkoutMinutes = parseInt(checkout[1]);
+                
+                var totalCheckinMinutes = checkinHours * 60 + checkinMinutes;
+                var totalCheckoutMinutes = checkoutHours * 60 + checkoutMinutes;
+                
+                var differenceMinutes = totalCheckoutMinutes - totalCheckinMinutes;
+                
+                var hours = Math.floor(differenceMinutes / 60);
+                var minutes = differenceMinutes % 60;
+                
+                var resultField = document.getElementById("totalDuration");
+                resultField.textContent = "Total Duration: " + hours + " hours, " + minutes + " minutes";
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1>Check-In and Check-Out</h1>
+    
+    <label for="checkin">Check-In:</label>
+    <input type="checkbox" id="checkinCheckbox" onclick="logTime('checkinCheckbox', 'checkinTime', 'totalDuration')">
+    <input type="time" id="checkinTime" readonly>
+    
+    <br><br>
+    
+    <label for="checkout">Check-Out:</label>
+    <input type="checkbox" id="checkoutCheckbox" onclick="logTime('checkoutCheckbox', 'checkoutTime', 'totalDuration')">
+    <input type="time" id="checkoutTime" readonly>
+    
+    <br><br>
+    
+    <div id="totalDuration"></div>
+</body>
+</html>
+
